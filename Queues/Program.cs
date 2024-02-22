@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.Metrics;
+using System.Numerics;
 using Queues.Models;
 namespace Queues
 {
@@ -166,6 +167,75 @@ namespace Queues
                 q1.Insert(q1.Remove());
                 count--;
             }
+        }
+       
+        public static bool BoolOk(Queue<char> q)
+        {
+            bool ok = false;
+            Queue<char> temp = Copy(q);
+            if (temp.Head() != 'T' || temp.Head() != 'F')
+                return false;
+            int howMany = Count(temp);
+            for(int i=0; i<howMany-1; i++)
+            {
+                char value1 = temp.Remove();
+                char value2 = temp.Remove();
+                if (((value1 == 'A' || value1 == 'O') && (value2 == 'T' || value2 == 'F')) || ((value2 == 'A' || value2 == 'O') && (value1 == 'T' || value1 == 'F')))
+                    ok = true;
+                else ok = false;
+            }
+            if (temp.Remove() != 'T' || temp.Remove() != 'F')
+                ok = false;
+            return ok;
+        }
+
+        public static Queue<int> TheBiggestQueue(Queue<int> q)
+        {
+            Queue<int> temp = Copy(q);
+            Queue<int> qnew = new Queue<int>();
+            int max = 0;
+            int value = temp.Remove();
+            while (!temp.IsEmpty())
+            {
+                while (value != -1)
+                {
+                    if (value > max)
+                        max = value;
+                    value = temp.Remove();
+                }
+                qnew.Insert(max);
+                value = temp.Remove();
+            }
+            return qnew;
+        }
+
+        public static int MakeTheBigNum(Queue<int> q)
+        {
+            Queue<int> temp = Copy(q);
+           int value = temp.Remove();
+            int num = value;
+            while (!temp.IsEmpty())
+            {
+                int p10 = 10;
+                value = temp.Remove();
+                num += value * p10;
+                p10 *= 10;
+            }
+            return num;
+        }
+
+        public static Queue<int> E5(Queue<int> q1, Queue<int> q2)
+        {
+            int bothsum = MakeTheBigNum(q1) + MakeTheBigNum(q2);
+            Queue<int> qnew = new Queue<int>();
+            while(bothsum > 0)
+            {
+                qnew.Insert(bothsum / 10);
+                bothsum /= 10;
+            }
+            return qnew;
+
+
         }
         static void Main(string[] args)
         {
